@@ -24,17 +24,16 @@ switch($_SERVER['REQUEST_METHOD']){
 
     $record_time = $rateData['USD'.$_POST["data"]["currency"]]['UTC'];
 
-    $query="insert into calculate_record values('$currency',$rate,$price,$discount,$result,'$record_time')";
-    $result=@pg_query($db,$query);
-
     echo json_encode(array(
         "currency" => $currency,
         "rate" => $rate,
         "price" => $price,
         "discount" => $discount,
-        "query" => $query,
         "result" => $result
     ));
+
+    $query="insert into calculate_record values('$currency',$rate,$price,$discount,$result,'$record_time')";
+    $result=@pg_query($db,$query);
 
     break;
     case "GET":

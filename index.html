@@ -47,7 +47,28 @@
                   <button type="button" class="btn btn-outline-primary change">兌換台幣</button>
                 </div>      
             </div>
-
+          <div class="col-12 mt-3 TWD">兌換台幣一共：<span class="coin"></span> 元</div>
+          <div class="col-12 mt-1">
+            <hr>          
+            <button type="button" class="btn btn-outline-primary history">列出歷史紀錄</button>
+          </div>
+          <div class="col-12 mt-2 rowHistory" style="width: 100%;height: 300px;overflow: overlay;">
+            <hr>        
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">兌換幣別</th>
+                    <th scope="col">兌換金額</th>
+                    <th scope="col">兌換則扣</th>
+                    <th scope="col">兌換總額(台幣)</th>
+                    <th scope="col">兌換時間</th>
+                  </tr>
+                </thead>
+                  <tbody class="rowHistoryBody">                  
+                  </tbody>
+              </table>
+          </div>
         </div>
       </div>
     </div>
@@ -56,24 +77,45 @@
 </html>
 
 <script>
-$("#FromCurrency").change(function(){ 
+$('.TWD').hide();
+$('.rowHistory').hide();
+$(".history").click(function(){ 
+ $('.rowHistory').show();
  $.get("./calculate", function(e){  
-  console.log(e);
+  // console.log(e);
+  let text = "";
+  let num = 0;
+  e['data'].forEach(
+    data => {
+      num++;
+      text += "<tr><th scope='row'>" + num + "</th><td>" + data.currency + "</th><td>" + data.price + "</th><td>" + data.rate + "</th><td>" + data.result + "</th><td>" + data.record_time + "</th></tr>";
+    }
+  );
+  console.log(text);
+  $('.rowHistoryBody').html(text);
+  // console.log(e['data']);
+  // console.log(e['data'].length);
  },'json');
 });
 
 $(".change").click(function(){
+  if($("#FromCurrency").val() != '' && $("#Amount").val() != '' && $("#discountFloat").val() != ''  ){
+    sendPost();
+  }else{
+    alert("請完整輸入兌換幣別、兌換金額、折扣。");
+  }  
+});
 
+function sendPost(){
   let data = {
    "currency" : $("#FromCurrency").val(),
    "price" : $("#Amount").val(),
    "discount" : $("#discountFloat").val(),
   };
-
   $.post("./calculate",{data}, function(e) {
-    console.log(e);
+    // console.log(e);
+    $('.TWD').show();
+    $('.coin').text(e.result);
   },'json');
-  
-});
-
+}
 </script>
