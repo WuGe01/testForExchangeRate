@@ -1,0 +1,10 @@
+.FlexCenter{
+    height: 100%;
+    display: flex;
+    align-content: center;
+    align-items: center;
+}
+.AllVertical{
+    width: 100vw;
+    height: 100vh;
+}
